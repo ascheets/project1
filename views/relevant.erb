@@ -13,14 +13,55 @@
 
      //when the document is ready to be manipulated
      $(document).ready(function(){
+	 
+	 //add a click handler to the button
+	 $("#addStuffButton").click(function() {
 
-     };
+	     var getInput1 = $("#input1").val().trim();
+	     var getInput2 = $("#input2").val().trim();
+
+	     //post some data to the server
+
+	     $.post("/urlToSendDataTo",
+
+		    {in1: input1, in2: input2}, //data (js object)
+
+		    function(data) { //function to call on return
+
+			//empty out the submitted div
+			$("#submitted").empty();
+
+			//clear out the textboxes
+			$("#input1").val("");
+			$("#input2").val("");
+
+			//for each piece of data - val holds the json with the name and email
+			$.each(data, function(key, val) {
+			    //append first input
+			    $("#submitted").append(val.input1);
+			    //append second input
+			    $("#submitted").append(" " + val.input2);
+			    //newline
+			    $("#submitted").append("</br>");
+			});
+		    }
+	     );
+	 });
+     });
 
     </script>
     
   </head>
   
   <body>
+
+    <div id="submitted">
+
+      <% @all_submitted.each do |submitted| %>
+	<%= submitted.input1 %> <%= " " + submitted.input2 %>
+	<br/>
+      <% end %>
+    </div>
 
     <p>
       
