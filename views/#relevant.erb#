@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>
+      Welcome to the relevant app.
+    </title>
+    
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+
+     //when the document is ready to be manipulated
+     $(document).ready(function(){
+
+     };
+
+    </script>
+    
+  </head>
+
+</html>
