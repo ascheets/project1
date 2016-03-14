@@ -17,14 +17,14 @@
 	 //add a click handler to the button
 	 $("#addStuffButton").click(function() {
 
-	     var getInput1 = $("#input1").val().trim();
-	     var getInput2 = $("#input2").val().trim();
+	     var newInput1 = $("#input1").val().trim();
+	     var newInput2 = $("#input2").val().trim();
 
 	     //post some data to the server
 
-	     $.post("/urlToSendDataTo",
+	     $.post("/inputs",
 
-		    {in1: input1, in2: input2}, //data (js object)
+		    {input1: newInput1, input2: newInput2}, //data (js object)
 
 		    function(data) { //function to call on return
 
@@ -56,11 +56,10 @@
   <body>
 
     <div id="submitted">
-
-      <% @all_submitted.each do |submitted| %>
+      <% @all_inputs.each do |submitted| %>
 	<%= submitted.input1 %> <%= " " + submitted.input2 %>
 	<br/>
-      <% end %>
+      <% end %>      
     </div>
 
     <p>

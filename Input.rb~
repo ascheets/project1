@@ -1,6 +1,6 @@
 require 'sequel'
 
-class Model1 < Sequel::Model
+class Inputs < Sequel::Model
 
   #make associations, add helper methods here
 
