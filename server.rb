@@ -19,7 +19,7 @@ configure do
   DB.create_table? :components do
     primary_key :id
     String :code
-    String :function
+    String :type
     foreign_key :teardown_id, :teardowns
   end
 
@@ -46,25 +46,25 @@ get '/' do
   @all_components = Component.all
 
   #render the template in the views folder
-  erb :relevant
+  erb :teardowns
 
 end
 
 #handles requests to add new input
-post '/inputs' do
+post '/components' do
 
   #create a new input with the data from the browser
-  Input.create(:input1 => params[:input1], #from the request's post data
-               :input2 => params[:input2])
+  Component.create(:code => params[:code], #from the request's post data
+               :type => params[:type])
 
   #get all the inputs and turn each one into a hash and store it in an array
-  inputs = Input.all.map do |input|
+  components = Component.all.map do |component|
 
-    {:input1 => input.input1, :input2 => input.input2}
+    {:code => component.code, :type => component.type}
 
   end 
 
-  return json inputs
+  return json components
 
 end
 
