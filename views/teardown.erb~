@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <link rel="stylesheet" href="main.css" >
+
+    <title>
+      Welcome to the relevant app.
+    </title>
+    
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+
+     //when the document is ready to be manipulated
+     $(document).ready(function(){
+	 
+	 //add a click handler to buttons
+
+	 //add component button
+	 $("#addComponent").click(function() {
+
+	     var codeIn = $("#code").val().trim();
+	     var typeIn = $("#type").val().trim();
+
+	     //post data to the server
+
+	     $.post("/components",
+
+		    {code: codeIn, type: typeIn}, //data (js object)
+
+		    function(data) { //function to call on return
+
+			//empty out the submitted div
+			$("#components").empty();
+
+			//clear out the textboxes
+			$("#code").val("");
+			$("#type").val("");
+
+			//for each piece of data - val holds the json with the name and email
+			$.each(data, function(key, val) {
+			    //append first input
+			    $("#components").append(val.code);
+			    //append second input
+			    $("#components").append(" " + val.type);
+			    //newline
+			    $("#components").append("</br>");
+			});
+		    }
+	     );
+	 });
+
+	 //add teardown button
+	 $("#addTeardown").click(function() {
+
+	     var objectIn = $("#object").val().trim();
+
+	     //post data to the server
+
+	     $.post("/teardowns",
+
+		    {object: objectIn}, 
+
+		    function(data) {
+
+			//empty out the submitted div
+			$("#teardowns").empty();
+
+			//clear out the textboxes
+			$("#object").val("");
+
+			//for each piece of data, append to div
+			$.each(data, function(key, val) {
+			    //append input
+			    $("#teardowns").append(val.object);
+			    //newline
+			    $("#teardowns").append("</br>");
+			});
+		    }
+	     );
+
+	 });
+
+	 //switch to teardown view button
+	 $("#goTeardown").click(function() {
+
+	     $.get("/teardown")
+
+	 });
+
+     });
+
+     function myFunction() {
+	 document.getElementById("myDropdown").classList.toggle("show");
+     }
+
+     window.onclick = function(event) {
+
+	 if(!event.target.matches('.dropbtn')) {
+
+	     var dropdowns = document.getElementsByClassName("dropdown-content");
+	     var i;
+	     for (i = 0; i < dropdowns.length; i++) {
+		 
+		 var openDropdown = dropdowns[i];
+		 if(openDropdown.classList.contains('show')){
+		     openDropdown.classList.remove('show');
+		 }
+	     }
+	 }
+     }
+
+    </script>
+    
+  </head>
+  
+  <body>
+
+    Trying to create a dropdown here
+    <br/>
+    <div class="dropdown">
+      <button onclick="myFunction()" class="dropbtn">Select a Teardown</button>
+      <div id="myDropdown"  class="dropdown-content">
+	<% @all_teardowns.each do |teardown|  %>
+	  <a href="#"> <%= teardown.object %> </a>
+	<% end %>
+      </div>
+    </div>
+
+    <br/>
+
+    List of components that have been added:
+    <div id="components">
+      <% @all_components.each do |component| %>
+	<%= component.code %> <%= " " + component.type %>
+	<br/>
+      <% end %>      
+    </div>
+    <br/>
+
+    List of all teardowns that have been started:
+    <div id="teardowns">
+      <% @all_teardowns.each do |teardown|  %>
+	<%= teardown.object %>
+	<br/>
+      <% end %>
+    </div>
+
+    <p>
+      
+      Enter your new Component Here
+      <br/>
+      Enter component technical id here: <input id="code" type="text" />
+      <br/>
+      Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
+      <br/>
+      <input id="addComponent" type="submit"/>
+    </p>
+
+    <p>
+
+      Start a new Teardown here
+      <br/>
+      Enter the name of the object you are dismantling: <input id="object" type="text" />
+      <br/>
+      <input id="addTeardown" type="submit"/>
+
+      Welcome to the new web page son.
+      <br/>
+      <input id="goTeardown" type="submit"/>
+
+    </p>
+
+  </body>
+
+</html>
