@@ -6,25 +6,44 @@ require 'sinatra/json'
 configure do
 
   #connect to the sqlite database
-  DB = Sequel.connect('sqlite://Inputs.db')
+  DB = Sequel.connect('sqlite://Teardowns.db')
   
-  #create tables
-  DB.create_table? :inputs do
+  #create a teardowns table (if it doesn't already exist)
+  DB.create_table? :teardowns do
     primary_key :id
-    String :input1
-    String :input2
+    String :instrument
+    DateTime :teardownDate
   end
 
-  #open up inputs
-  require_relative 'Input'
+  #create a component table
+  DB.create_table? :components do
+    primary_key :id
+    String :code
+    String :function
+    foreign_key :teardown_id, :teardowns
+  end
+
+  #create the models
+  class Teardown < Sequel::Model
+    one_to_many :components
+  end
+
+  class Component < Sequel::Model
+    many_to_one :teardown
+  end
 
 end
+
+#create helper methods
+
+
 
 #handles the initial request for the page
 get '/' do
 
   #get pre-existing data as relevant
-  @all_inputs = Input.all
+  @all_teardowns = Teardown.all
+  @all_components = Component.all
 
   #render the template in the views folder
   erb :relevant
@@ -39,7 +58,11 @@ post '/inputs' do
                :input2 => params[:input2])
 
   #get all the inputs and turn each one into a hash and store it in an array
-  inputs = Input.all 
+  inputs = Input.all.map do |input|
+
+    {:input1 => input.input1, :input2 => input.input2}
+
+  end 
 
   return json inputs
 
