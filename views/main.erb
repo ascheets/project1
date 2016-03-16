@@ -15,15 +15,40 @@
 
      //when the document is ready to be manipulated
      $(document).ready(function(){
-	 
+
 	 //add click handler to buttons
 
 	 //new component choice
 	 $("#newComponent").click(function() {
 
-	     $("#activeArea").load("newComponent.html");
+	     $("#newComponentArea").removeClass("hidden");
 
 	 });
+
+	 //add component button
+	 $("#addComponent").click(function() {
+
+	     var codeIn = $("#code").val().trim();
+	     var typeIn = $("#type").val().trim();
+
+	     //post data to the server
+
+	     $.post("/components",
+
+		    {code: codeIn, type: typeIn}, //data (js object)
+
+		    function(data) { //function to call on return
+
+			//clear out the textboxes
+			$("#code").val("");
+			$("#type").val("");
+
+			$("#newComponentArea").addClass("hidden");
+			
+		    }
+	     );
+	 });
+
 
 	 //add button listener for each component choice
 	 <% @all_components.each do |component| %>
@@ -33,8 +58,6 @@
 	     //get data from server on component
 	     console.log("component<%= component.id %>");
 
-	     //$("#activeArea").load("inventory.html")
-
 	 });
 
 	 <% end %>
@@ -42,7 +65,29 @@
 	 //new teardown choice
 	 $("#newTeardown").click(function() {
 
-	     $("#activeArea").load("newTeardown.html");
+	     $("#newTeardownArea").removeClass("hidden");
+
+	 });
+
+	 //add teardown button
+	 $("#addTeardown").click(function() {
+
+	     var objectIn = $("#object").val().trim();
+
+	     //post data to the server
+
+	     $.post("/teardowns",
+
+		    {object: objectIn}, 
+
+		    function(data) {
+
+			$("#object").val("");
+
+			$("#newTeardownArea").addClass("hidden");
+
+		    }
+	     );
 
 	 });
 
@@ -54,18 +99,60 @@
 	     //get data from the server on teardown
 	     console.log("teardown<%=teardown.id%>");
 
-	     $.get("/teardown", {id: <%=teardown.id%>});
-	     
-	     $("#activeArea").load("Teardown.html");
+	     $.get("/teardown",
+
+		   {id: <%=teardown.id%>},
+
+		   function(data) {
+
+		       $("#currentTeardown").removeClass("hidden");
+		       $("#teardownParts").removeClass("hidden");
+		       $("#addToTearDown").removeClass("hidden");
+
+		       //empty region
+		       $("#currentTeardown").empty();
+		       $("#teardownParts").empty();
+
+		       //append the name
+		       $("#currentTeardown").append("Tearing down: ");
+		       $("#currentTeardown").append(data.object);
+		       //newline
+		       $("#currentTeardown").append("</br>");
+
+		       
+
+		   }
+	     );
 	     
 	 });
 
 	 <% end %>
 
-	 //new teardown choice
+	 //new project choice
 	 $("#newProject").click(function() {
 
-	     $("#activeArea").load("newProject.html");
+	     $("#newProjectArea").removeClass("hidden");
+
+	 });
+
+	 //add project button
+	 $("#addProject").click(function() {
+
+	     var projectIn = $("#project").val().trim();
+
+	     //post data to the server
+
+	     $.post("/newProject",
+
+		    {title: projectIn}, 
+
+		    function(data) {
+
+			$("#project").val("");
+			$("#newProjectArea").addClass("hidden");
+
+		    }
+	     );
 
 	 });
 
@@ -76,9 +163,8 @@
 
 	     //post data to the server
 
-	     console.log("<%= project.title %>");
+	     console.log("project<%= project.id %>");
 
-	     //$("#activeArea").load("project.html");
 
 	 });
 
@@ -140,6 +226,30 @@
     </div>
     <br/>
 
+    <div id="newTeardownArea" class="hidden">
+      Start a new Teardown here
+      <br/>
+      Enter the name of the object you are dismantling: <input id="object" type="text" />
+      <br/>
+      <input id="addTeardown" type="submit"/>
+    </div>
+
+    <div id="currentTeardown" class="hidden">
+      
+    </div>
+    <div id="teardownParts" class="hidden">
+
+    </div>
+    <div id="addToTearDown" class="hidden">
+      Add a new component to your teardown
+      <br/>
+      Enter component technical id here: <input id="code" type="text" />
+      <br/>
+      Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
+      <br/>
+      <input id="teardownNewComp" type="submit"/>
+    </div>
+
     <br/>
     <div class="dropdown">
       <button onclick="showProjects()" class="dropbtn">Select a Project</button>
@@ -152,8 +262,16 @@
     </div>
     <br/>
 
+    <div id="newProjectArea" class="hidden">
+      Start a new Project here
+      <br/>
+      Enter the name of the object you are building: <input id="project" type="text" />
+      <br/>
+      <input id="addProject" type="submit"/>
+    </div>
+
     <br/>
-    <div class="dropdown">
+    <div class="dropdown" class="hidden">
       <button onclick="showComponents()" class="dropbtn">Inventory</button>
       <div id="componentDD"  class="dropdown-content">
 	<a id="newComponent">Add new</a>
@@ -163,6 +281,16 @@
       </div>
     </div>
     <br/>
+
+    <div id="newComponentArea" class="hidden">
+      Add a new component to your inventory
+      <br/>
+      Enter component technical id here: <input id="code" type="text" />
+      <br/>
+      Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
+      <br/>
+      <input id="addComponent" type="submit"/>
+    </div>
 
     <p>
 

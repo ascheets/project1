@@ -108,15 +108,12 @@ end
 
 get '/teardown' do
   
-  @currentTeardown = Teardown[params[:id]]
+  teardown = Teardown[:id => params[:id]]
 
-end
+  #create a hash with the relevant information
+  td = {:object => teardown.object}
 
-post "/currentTeardown" do
-
-  puts "here mothafucka"
-
-  return @currentTeardown.object
+  return json td
 
 end
 

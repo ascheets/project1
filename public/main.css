@@ -19,6 +19,13 @@
     display: inline-block;
 }
 
+.hidden {
+    visibility: hidden;    
+    over-flow: hidden;
+    width: 0px;
+    height: 0px;
+}
+
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
     display: none;
@@ -42,3 +49,4 @@
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+
