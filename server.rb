@@ -55,8 +55,11 @@ configure do
 
 end
 
-#create helper methods
+#risky global variables...?
+currentTeardown = Teardown.new
 
+
+#create helper methods
 
 #handles the initial request for the page
 get '/' do
@@ -108,13 +111,34 @@ end
 
 get '/teardown' do
   
-  teardown = Teardown[:id => params[:id]]
+  currentTeardown = Teardown[:id => params[:id]]
+
+  teardown = currentTeardown
 
   #create a hash with the relevant information
   td = {:object => teardown.object}
 
   return json td
 
+end
+
+post '/addToTearDown' do
+
+  component = Component.create(:code => params[:code], :type => params[:type])
+
+  currentTeardown.add_component(component)
+
+  components = Array.new
+
+  currentTeardown.components.each do |comp|
+
+    components << {:code => comp.code, :type => comp.type}
+
+  end
+
+  #create a hash with the relevant information
+  return json components
+  
 end
 
 #adding new project

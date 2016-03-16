@@ -91,6 +91,36 @@
 
 	 });
 
+	 //add component button
+	 $("#tdNewComp").click(function() {
+
+	     var curObj = 1;
+	     var codeIn = $("#code").val().trim();
+	     var typeIn = $("#type").val().trim();
+
+	     //post data to the server
+
+	     $.post("/addToTearDown",
+
+		    {object: curObj, code: codeIn, type: typeIn}, //data (js object)
+
+		    function(data) { //function to call on return
+
+			//clear out the textboxes
+			$("#code").val("");
+			$("#type").val("");
+
+			$.each(data, function(key, val) {
+
+			    console.log(val.code);
+			    console.log(val.type);
+
+			});
+
+		    }
+	     );
+	 });
+
 	 //add button listener for each teardown choice
 	 <% @all_teardowns.each do |teardown| %>
 	 
@@ -98,6 +128,9 @@
 
 	     //get data from the server on teardown
 	     console.log("teardown<%=teardown.id%>");
+	     
+	     //set id of currentTeardown
+	     <%currentTeardown = teardown.id%>
 
 	     $.get("/teardown",
 
@@ -118,8 +151,12 @@
 		       $("#currentTeardown").append(data.object);
 		       //newline
 		       $("#currentTeardown").append("</br>");
+		       $("#currentTeardown").append("</br>");
 
-		       
+		       $("#teardownParts").append("Parts so far: ");
+		       //newline
+		       $("#teardownParts").append("</br>");
+		       $("#teardownParts").append("</br>");
 
 		   }
 	     );
@@ -247,7 +284,7 @@
       <br/>
       Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
       <br/>
-      <input id="teardownNewComp" type="submit"/>
+      <input id="tdNewComp" type="submit"/>
     </div>
 
     <br/>
