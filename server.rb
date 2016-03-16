@@ -71,12 +71,6 @@ get '/' do
 
 end
 
-get '/teardowns' do
-
-  erb :teardown
-
-end
-
 #handles requests to add new components
 post '/components' do
 
@@ -109,6 +103,20 @@ post '/teardowns' do
   end
 
   return json teardowns
+
+end
+
+get '/teardown' do
+  
+  @currentTeardown = Teardown[params[:id]]
+
+end
+
+post "/currentTeardown" do
+
+  puts "here mothafucka"
+
+  return @currentTeardown.object
 
 end
 

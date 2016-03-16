@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Welcome to the relevant app.
+    </title>
+
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+
+     $(document).ready(function(){
+
+	 //add component button
+	 $("#addComponent").click(function() {
+
+	     var codeIn = $("#code").val().trim();
+	     var typeIn = $("#type").val().trim();
+
+	     //post data to the server
+
+	     $.post("/components",
+
+		    {code: codeIn, type: typeIn}, //data (js object)
+
+		    function(data) { //function to call on return
+
+			//empty out the submitted div
+			$("#components").empty();
+
+			//clear out the textboxes
+			$("#code").val("");
+			$("#type").val("");
+
+			//for each piece of data - val holds the json with the name and email
+			$.each(data, function(key, val) {
+			    //append first input
+			    $("#components").append(val.code);
+			    //append second input
+			    $("#components").append(" " + val.type);
+			    //newline
+			    $("#components").append("</br>");
+			});
+		    }
+	     );
+	 });
+
+     });     
+
+    </script>
+
+  </head>
+
+  <body>
+
+    <p>
+      
+      Add a new component to your inventory
+      <br/>
+      Enter component technical id here: <input id="code" type="text" />
+      <br/>
+      Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
+      <br/>
+      <input id="addComponent" type="submit"/>
+    </p>
+
+
+  </body>
+
+</html>
+
+

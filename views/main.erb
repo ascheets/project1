@@ -16,119 +16,69 @@
      //when the document is ready to be manipulated
      $(document).ready(function(){
 	 
-	 //add a click handler to buttons
+	 //add click handler to buttons
 
-	 //add component button
-	 $("#addComponent").click(function() {
+	 //new component choice
+	 $("#newComponent").click(function() {
 
-	     var codeIn = $("#code").val().trim();
-	     var typeIn = $("#type").val().trim();
+	     $("#activeArea").load("newComponent.html");
 
-	     //post data to the server
-
-	     $.post("/components",
-
-		    {code: codeIn, type: typeIn}, //data (js object)
-
-		    function(data) { //function to call on return
-
-			//empty out the submitted div
-			$("#components").empty();
-
-			//clear out the textboxes
-			$("#code").val("");
-			$("#type").val("");
-
-			//for each piece of data - val holds the json with the name and email
-			$.each(data, function(key, val) {
-			    //append first input
-			    $("#components").append(val.code);
-			    //append second input
-			    $("#components").append(" " + val.type);
-			    //newline
-			    $("#components").append("</br>");
-			});
-		    }
-	     );
 	 });
 
 	 //add button listener for each component choice
 	 <% @all_components.each do |component| %>
 
-	 $("#<%=component.code%>").click(function() {
+	 $("#component<%=component.id%>").click(function() {
 
 	     //get data from server on component
-	     console.log(<%= component.code %>);
+	     console.log("component<%= component.id %>");
+
+	     //$("#activeArea").load("inventory.html")
 
 	 });
 
 	 <% end %>
 
-	 //add teardown button
-	 $("#addTeardown").click(function() {
+	 //new teardown choice
+	 $("#newTeardown").click(function() {
 
-	     var objectIn = $("#object").val().trim();
-
-	     //post data to the server
-
-	     $.post("/teardowns",
-
-		    {object: objectIn}, 
-
-		    function(data) {
-
-			//clear out the textboxes
-			$("#object").val("");
-
-		    }
-	     );
+	     $("#activeArea").load("newTeardown.html");
 
 	 });
 
 	 //add button listener for each teardown choice
 	 <% @all_teardowns.each do |teardown| %>
 	 
-	 $("#<%=teardown.object%>").click(function() {
+	 $("#teardown<%=teardown.id%>").click(function() {
 
 	     //get data from the server on teardown
-	     console.log(<%= teardown.object %>);
+	     console.log("teardown<%=teardown.id%>");
 
-	     //print object down below
-	     $("#currentTeardown").append(<%= teardown.object %>);
-
+	     $.get("/teardown", {id: <%=teardown.id%>});
+	     
+	     $("#activeArea").load("Teardown.html");
+	     
 	 });
 
 	 <% end %>
 
-	 //add project button
-	 $("#addProject").click(function() {
+	 //new teardown choice
+	 $("#newProject").click(function() {
 
-	     var projectIn = $("#project").val().trim();
-
-	     //post data to the server
-
-	     $.post("/newProject",
-
-		    {title: projectIn}, 
-
-		    function(data) {
-
-			//clear out the textboxes
-			$("#project").val("");
-
-		    }
-	     );
+	     $("#activeArea").load("newProject.html");
 
 	 });
 
 	 //add button listener for each project choice
 	 <% @all_projects.each do |project| %>
 
-	 $("#<%=project.title%>").click(function() {
+	 $("#project<%=project.id%>").click(function() {
 
 	     //post data to the server
 
-	     console.log(<%= project.title %>);
+	     console.log("<%= project.title %>");
+
+	     //$("#activeArea").load("project.html");
 
 	 });
 
@@ -176,83 +126,48 @@
   <body>
 
     Hello, welcome to this teardown/project manager. 
-    <br/>
-    <br/>
 
-    Continue a teardown
+    <br/>
     <br/>
     <div class="dropdown">
       <button onclick="showTeardowns()" class="dropbtn">Select a Teardown</button>
       <div id="teardownDD"  class="dropdown-content">
+	<a id="newTeardown">Start new</a>
 	<% @all_teardowns.each do |teardown|  %>
-	  <a id="<%= teardown.object %>" > <%= teardown.object %> </a>
+	  <a id="teardown<%= teardown.id %>" > <%= teardown.object %> </a>
 	<% end %>
       </div>
     </div>
     <br/>
 
-    <br/>
-    Continue a project
     <br/>
     <div class="dropdown">
       <button onclick="showProjects()" class="dropbtn">Select a Project</button>
       <div id="projectDD"  class="dropdown-content">
+	<a id="newProject">Start new</a>
 	<% @all_projects.each do |project|  %>
-	  <a id="<%=project.title%>"> <%= project.title %> </a>
+	  <a id="project<%= project.id %>"> <%= project.title %> </a>
 	<% end %>
       </div>
     </div>
     <br/>
 
-    <br/>
-    View your inventory
     <br/>
     <div class="dropdown">
-      <button onclick="showComponents()" class="dropbtn">Select a Component</button>
+      <button onclick="showComponents()" class="dropbtn">Inventory</button>
       <div id="componentDD"  class="dropdown-content">
+	<a id="newComponent">Add new</a>
 	<% @all_components.each do |component|  %>
-	  <a id="<%=component.code%>"> <%= component.code %> </a>
+	  <a id="component<%= component.id %>"> <%= component.code %> </a>
 	<% end %>
       </div>
     </div>
     <br/>
 
     <p>
-      
-      Add a new component to your inventory
-      <br/>
-      Enter component technical id here: <input id="code" type="text" />
-      <br/>
-      Enter component type here (capacitor, resistor, transistor, etc): <input id="type"  type="text" />
-      <br/>
-      <input id="addComponent" type="submit"/>
-    </p>
-
-    <p>
-
-      Start a new Teardown here
-      <br/>
-      Enter the name of the object you are dismantling: <input id="object" type="text" />
-      <br/>
-      <input id="addTeardown" type="submit"/>
-
-      <br/>
-      <br/>
-
-      Start a new Project here
-      <br/>
-      Enter the name of the object you are building: <input id="project" type="text" />
-      <br/>
-      <input id="addProject" type="submit"/>
-
-    </p>
-
-    <p>
-
-      
 
       <div id="activeArea">
-
+	
       </div>
 
     </p>

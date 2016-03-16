@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <!-- jquery -->
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+
+     //when the document is ready to be manipulated
+     $(document).ready(function(){
+	 
+
+     });
+
+     
+    </script>
+
+  </head>
+
+  <body>
+
+    Teardown
+    <br/>
+
+    <div id="teardownSpace" >
+
+    </div>
+
+  
+
+    <br/>
+    <br/>
+
+  </body>
+
+</html>
